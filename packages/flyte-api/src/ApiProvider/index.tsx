@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react';
 import AdminEndpoint from '../utils/AdminEndpoint';
-import { defaultLoginStatus, getLoginUrl, getLogoutUrl, LoginStatus } from './login';
+import { defaultLoginStatus, getLoginUrl, getLogoutUrl, tryLogin, LoginStatus } from './login';
 import getEndpointUrl from '../utils/getEndpointUrl';
 import RawEndpoint from '../utils/RawEndpoint';
 import getAdminApiUrl from '../utils/getAdminApiUrl';
@@ -11,6 +11,7 @@ export interface FlyteApiContextState {
   getLogoutUrl: (redirect?: string) => string;
   getProfileUrl: () => string;
   getAdminApiUrl: (endpoint: AdminEndpoint | string) => string;
+  tryLogin: () => Promise<boolean>;
 }
 
 const FlyteApiContext = createContext<FlyteApiContextState>({
@@ -20,6 +21,7 @@ const FlyteApiContext = createContext<FlyteApiContextState>({
   getLogoutUrl: () => '#',
   getProfileUrl: () => '#',
   getAdminApiUrl: () => '#',
+  tryLogin: async () => false,
 });
 
 interface FlyteApiProviderProps {
@@ -53,6 +55,7 @@ export const FlyteApiProvider = (props: FlyteApiProviderProps) => {
         getLogoutUrl: (redirect) => getLogoutUrl(flyteApiDomain, redirect),
         getProfileUrl: () => getEndpointUrl(RawEndpoint.Profile, flyteApiDomain),
         getAdminApiUrl: (endpoint) => getAdminApiUrl(endpoint, flyteApiDomain),
+        tryLogin: () => tryLogin(flyteApiDomain),
       }}
     >
       {children}

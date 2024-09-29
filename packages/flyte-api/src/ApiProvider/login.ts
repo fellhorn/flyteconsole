@@ -34,3 +34,8 @@ export function getLogoutUrl(
   const baseUrl = getEndpointUrl(RawEndpoint.Logout, adminUrl);
   return `${baseUrl}?redirect_url=${redirectUrl}`;
 }
+
+export async function tryLogin(adminUrl?: string) {
+  const response = await fetch(getLoginUrl(adminUrl));
+  return response.ok;
+}
