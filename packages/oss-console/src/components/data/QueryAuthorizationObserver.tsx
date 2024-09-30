@@ -13,10 +13,7 @@ export const QueryAuthorizationObserver: React.FC = () => {
   React.useEffect(() => {
     const unsubscribe = queryCache.subscribe(async (_query?: Query | undefined) => {
       if (!onlineManager.isOnline()) {
-        if (!await apiContext.tryLogin()) {
-          // trigger sign in modal
-          apiContext.loginStatus.setExpired(true);
-        }
+        apiContext.relogin();
       }
     });
     return unsubscribe;
